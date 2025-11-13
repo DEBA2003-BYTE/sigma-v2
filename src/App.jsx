@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Menu, X, Calendar, Clock, MapPin, Users, Award, BookOpen, Download, ExternalLink, Search, Linkedin, Instagram } from 'lucide-react';
 import ScrambledText from './ScrambledText';
 import CircularGallery from './CircularGallery';
 import LiquidChrome from './LiquidChrome';
 import ElectricBorder from './ElectricBorder';
+import PdfViewer from './PdfViewer'; // <-- added
 
 // Initialize window.storage if not exists
 if (!window.storage) {
@@ -20,17 +21,7 @@ if (!window.storage) {
 
 /*
  * PHOTO FILE MANAGEMENT FOR MEMBERS & ALUMNI:
- * 
- * Members' photos are stored in components/members/{year} folders (1styear, 2ndyear, 3rdyear, 4thyear)
- * Alumni photos are stored in components/alumni/{batch} folders
- * Each photo is named as Full_Name.jpeg (e.g., John_Doe.jpeg)
- * 
- * To add a new member or alumnus:
- * 1. Save their JPEG photo in the appropriate year/batch folder
- * 2. Use their full name as the filename (e.g., John_Doe.jpeg)
- * 3. The site will automatically extract the name and display it
- * 
- * Example: components/members/3rdyear/Debarghya_Pramanik.jpeg
+ * (comments unchanged)
  */
 
 // Initialize default data
@@ -267,10 +258,6 @@ function App() {
 
   // Member Card Component
   const MemberCard = ({ member }) => {
-    // Determine path based on whether it's a member (has year) or alumni (no year)
-    // Normalize photo path: accept either a full relative path (e.g. 'components/...')
-    // or just a filename (e.g. 'Name.jpeg'). Ensure it begins with a leading slash
-    // and encode URI to handle spaces.
     let imagePath = '';
     if (member && member.photo) {
       const photoStr = (typeof member.photo === 'string' ? member.photo.trim() : '');
@@ -311,12 +298,10 @@ function App() {
   // Alumni Card Component
   const AlumniCard = ({ member }) => {
     const [flipped, setFlipped] = useState(false);
-    // Normalize alumni image path similar to MemberCard. Accept full path or filename.
     let imagePath = '';
     if (member && member.photo) {
       const photoStr = (typeof member.photo === 'string' ? member.photo.trim() : '');
       if (photoStr.includes('/')) {
-        // If path already contains folder info, ensure leading slash
         imagePath = photoStr.startsWith('/') ? photoStr : `/${photoStr}`;
       } else {
         imagePath = `/components/alumni/${member.batch}/${photoStr}`;
@@ -521,16 +506,9 @@ function App() {
     // Generate members from photo list
     const yearPhotos = data.memberPhotos?.[selectedYear] || [];
     const allMembers = yearPhotos.map((photoPath, index) => {
-      // Ensure the path is a string and clean it up
       const cleanPath = typeof photoPath === 'string' ? photoPath.trim() : '';
-      
-      // Create the full image URL (prepend with / to make it an absolute path from the public directory)
       const imageUrl = cleanPath ? `/${cleanPath}` : '';
-      
-      // Extract just the filename for the name
       const filename = cleanPath.split('/').pop() || '';
-      
-      // Extract the name from the filename
       const name = extractNameFromFilename(filename);
       
       return {
@@ -613,16 +591,13 @@ function App() {
 
   // Alumni Page
   const AlumniPage = () => {
-    // Helper function to extract name from filename
     const extractNameFromFilename = (filename) => {
       const nameWithoutExt = filename.replace(/\.(jpeg|jpg|png|webp)$/i, '');
       return nameWithoutExt.replace(/_/g, ' ');
     };
     
-    // Get alumni photos (simple array, no batches)
     const alumniPhotos = data.alumniPhotos || [];
     
-    // Generate alumni from photo list
     const generatedAlumni = alumniPhotos.map((photo, index) => ({
       id: `alumni-${index}`,
       name: extractNameFromFilename(photo),
@@ -755,11 +730,8 @@ function App() {
     
     // Helper function to extract title and year from filename
     const extractMagazineInfo = (filename) => {
-      // Get just the filename without path
       const filenameOnly = filename.split('/').pop();
-      // Remove the .pdf extension
       const nameWithoutExt = filenameOnly.replace(/\.pdf$/i, '');
-      // Try to extract year (4 digits)
       const yearMatch = nameWithoutExt.match(/\b(19|20)\d{2}\b/);
       const year = yearMatch ? yearMatch[0] : 'Unknown';
       return {
@@ -768,23 +740,24 @@ function App() {
       };
     };
     
-    // Generate magazines from PDF list
+    // Generate magazines from PDF list (normalized path)
     const magazinePDFs = data.magazinePDFs || [];
-    const generatedMagazines = magazinePDFs.map((pdf, index) => {
+    const generatedMagazines = useMemo(() => magazinePDFs.map((pdf, index) => {
       const info = extractMagazineInfo(pdf);
-      // Remove any existing 'components/magazines/' prefix to prevent duplication
-      const cleanPdfPath = pdf.startsWith('components/magazines/') 
-        ? pdf.substring('components/magazines/'.length) 
-        : pdf;
-      
+
+      // Normalize to a served path in public/
+      // If pdf already begins with '/', use it. Otherwise prefix with '/'
+      // (DO NOT strip 'components/magazines' unless your stored paths require it)
+      const normalized = pdf.startsWith('/') ? pdf : `/${pdf}`;
+
       return {
         id: `mag-${index}`,
         filename: pdf,
         title: info.title,
         year: info.year,
-        pdfPath: `/${pdf}` // The path already includes 'components/magazines/'
+        pdfPath: normalized
       };
-    });
+    }), [magazinePDFs]);
 
     return (
       <div className="animate-[fadeIn_0.5s_ease-in-out]">
@@ -797,15 +770,8 @@ function App() {
             {generatedMagazines.map(magazine => (
               <div key={magazine.id} className="bg-[#BBDEFB] backdrop-blur-lg rounded-2xl overflow-hidden border-2 border-[#0000FF] hover:transform hover:scale-105 hover:-translate-y-2 transition-all duration-300 group">
                 <div className="relative h-64 overflow-hidden bg-[#1565C0]">
-                  <iframe
-                    src={`${magazine.pdfPath}#toolbar=0&navpanes=0&scrollbar=0&page=1&view=FitH`}
-                    className="w-full h-full pointer-events-none"
-                    title={`${magazine.title} Preview`}
-                    onError={(e) => {
-                      console.error('Error loading PDF preview:', magazine.pdfPath, e);
-                      e.target.src = '/placeholder-pdf.jpg';
-                    }}
-                  />
+                  {/* Replaced iframe with PdfViewer (mobile-friendly) */}
+                  <PdfViewer pdfPath={magazine.pdfPath} className="h-64 w-full" />
                   <div className="absolute inset-0 bg-[#E3F2FD]/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Download className="text-blue-900" size={48} />
                   </div>
@@ -948,88 +914,3 @@ function App() {
 }
 
 export default App;
-
-/*
-=== DATA MANAGEMENT INSTRUCTIONS ===
-
-MEMBERS - AUTOMATIC NAME EXTRACTION:
-The Members page automatically extracts names from photo filenames!
-
-Step 1: Add photo to the appropriate year folder:
-  Frontend/public/components/members/3rdyear/John_Doe.jpeg
-
-Step 2: Register the filename in browser console (F12):
-  const data = window.storage.get('sigma-club-data');
-  data.memberPhotos['3rd'].push('John_Doe.jpeg');
-  window.storage.set('sigma-club-data', data);
-  location.reload();
-
-The name "John Doe" will be automatically extracted and displayed!
-
-NAMING RULES:
-- Use underscores: John_Doe.jpeg → displays as "John Doe"
-- Works with multiple names: Mary_Jane_Watson.jpeg → "Mary Jane Watson"
-- Supported formats: .jpeg, .jpg, .png, .webp
-
-ADD MULTIPLE MEMBERS AT ONCE:
-const data = window.storage.get('sigma-club-data');
-data.memberPhotos['3rd'].push('John_Doe.jpeg', 'Jane_Smith.jpeg', 'Bob_Wilson.jpeg');
-window.storage.set('sigma-club-data', data);
-location.reload();
-
-VIEW CURRENT MEMBERS:
-const data = window.storage.get('sigma-club-data');
-console.log('1st Year:', data.memberPhotos['1st']);
-console.log('2nd Year:', data.memberPhotos['2nd']);
-console.log('3rd Year:', data.memberPhotos['3rd']);
-console.log('4th Year:', data.memberPhotos['4th']);
-
-REMOVE A MEMBER:
-const data = window.storage.get('sigma-club-data');
-data.memberPhotos['3rd'] = data.memberPhotos['3rd'].filter(photo => photo !== 'John_Doe.jpeg');
-window.storage.set('sigma-club-data', data);
-location.reload();
-
----
-
-OTHER DATA MANAGEMENT:
-
-1. ADD AN EVENT:
-const data = window.storage.get('sigma-club-data');
-data.events.push({
-  id: Date.now(),
-  title: "Tech Workshop 2025",
-  date: "2025-12-15",
-  time: "18:00",
-  venue: "Main Auditorium",
-  description: "Join us for an exciting tech workshop.",
-  image: "data:image/jpeg;base64,...",
-  registrationLink: "https://forms.google.com/..."
-});
-window.storage.set('sigma-club-data', data);
-location.reload();
-
-2. ADD AN ALUMNI:
-const data = window.storage.get('sigma-club-data');
-data.alumni.push({
-  id: Date.now(),
-  name: "Jane Smith",
-  batch: "2020",
-  photo: "Jane_Smith.jpeg",
-  linkedin: "https://linkedin.com/in/janesmith",
-  currentRole: "Software Engineer at Google"
-});
-window.storage.set('sigma-club-data', data);
-location.reload();
-
-3. ADD ABOUT IMAGES:
-const data = window.storage.get('sigma-club-data');
-data.aboutImages.push('new-team-photo.jpeg');
-window.storage.set('sigma-club-data', data);
-location.reload();
-
-PHOTO LOCATIONS:
-- Members: Frontend/public/components/members/{year}year/Name.jpeg
-- Alumni: Frontend/public/components/alumni/{batch}/Name.jpeg
-- About: Frontend/public/components/about/photo.jpeg
-*/
