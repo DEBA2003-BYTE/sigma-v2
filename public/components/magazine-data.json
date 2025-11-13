@@ -1,0 +1,81 @@
+{
+  "magazines": [
+    {
+      "id": 1,
+      "title": "Browse Edition 2016",
+      "pdfUrl": "/components/magazines/Browse Edition 2016.pdf",
+      "year": 2016,
+      "description": "The 2016 Browse Edition of Sigma Magazine featuring highlights from the year."
+    },
+    {
+      "id": 2,
+      "title": "Winter Edition 2016",
+      "pdfUrl": "/components/magazines/Winter Edition 2016.pdf",
+      "year": 2016,
+      "description": "The Winter 2016 edition with seasonal highlights and achievements."
+    },
+    {
+      "id": 3,
+      "title": "Winter Edition 2018",
+      "pdfUrl": "/components/magazines/Winter Edition 2018.pdf",
+      "year": 2018,
+      "description": "Winter 2018 edition showcasing our annual accomplishments and events."
+    },
+    {
+      "id": 4,
+      "title": "Winter Edition 2019",
+      "pdfUrl": "/components/magazines/Winter Edition 2019.pdf",
+      "year": 2019,
+      "description": "2019 Winter Edition featuring our yearly review and future outlook."
+    },
+    {
+      "id": 5,
+      "title": "Browse Edition 2020",
+      "pdfUrl": "/components/magazines/Browse Edition 2020.pdf",
+      "year": 2020,
+      "description": "The 2020 Browse Edition with a comprehensive look at our activities."
+    },
+    {
+      "id": 6,
+      "title": "Winter Edition 2022",
+      "pdfUrl": "/components/magazines/Winter Edition SIGMA -2022.pdf",
+      "year": 2022,
+      "description": "Winter 2022 edition highlighting our achievements and events."
+    },
+    {
+      "id": 7,
+      "title": "Browse Edition 2022",
+      "pdfUrl": "/components/magazines/Browse Edition 2022.pdf",
+      "year": 2022,
+      "description": "2022 Browse Edition featuring our annual report and highlights."
+    },
+    {
+      "id": 8,
+      "title": "Browse Edition 2023",
+      "pdfUrl": "/components/magazines/Browse Edition 2023.pdf",
+      "year": 2023,
+      "description": "The 2023 edition showcasing our yearly progress and milestones."
+    },
+    {
+      "id": 9,
+      "title": "Winter Edition 2024",
+      "pdfUrl": "/components/magazines/Winter Edition 2024.pdf",
+      "year": 2024,
+      "description": "Winter 2024 edition with updates on our latest initiatives."
+    },
+    {
+      "id": 10,
+      "title": "Browse Edition 2024",
+      "pdfUrl": "/components/magazines/Browse Edition 2024.pdf",
+      "year": 2024,
+      "description": "The 2024 Browse Edition featuring our annual review and future plans."
+    },
+    {
+      "id": 11,
+      "title": "Browse Edition 2025",
+      "pdfUrl": "/components/magazines/Browse Edition 2025.pdf",
+      "year": 2025,
+      "description": "Our latest edition with the most recent updates and achievements."
+    }
+  ]
+}

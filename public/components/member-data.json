@@ -1,0 +1,52 @@
+{
+  "members": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "role": "President",
+      "year": "3rd",
+      "image": "/components/members/3rdyear/John_Doe.jpg",
+      "bio": "Passionate about technology and leadership."
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "role": "Vice President",
+      "year": "3rd",
+      "image": "/components/members/3rdyear/Jane_Smith.jpg",
+      "bio": "Loves coding and community building."
+    },
+    {
+      "id": 3,
+      "name": "Alex Johnson",
+      "role": "Treasurer",
+      "year": "2nd",
+      "image": "/components/members/2ndyear/Alex_Johnson.jpg",
+      "bio": "Finance enthusiast with a passion for technology."
+    },
+    {
+      "id": 4,
+      "name": "Emily Davis",
+      "role": "Secretary",
+      "year": "2nd",
+      "image": "/components/members/2ndyear/Emily_Davis.jpg",
+      "bio": "Organized and detail-oriented team player."
+    },
+    {
+      "id": 5,
+      "name": "Michael Brown",
+      "role": "Event Coordinator",
+      "year": "1st",
+      "image": "/components/members/1styear/Michael_Brown.jpg",
+      "bio": "Creative mind with a passion for organizing events."
+    },
+    {
+      "id": 6,
+      "name": "Sarah Wilson",
+      "role": "Marketing Head",
+      "year": "1st",
+      "image": "/components/members/1styear/Sarah_Wilson.jpg",
+      "bio": "Marketing enthusiast with a creative edge."
+    }
+  ]
+}
