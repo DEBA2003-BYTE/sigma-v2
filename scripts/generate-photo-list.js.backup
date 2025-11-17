@@ -4,7 +4,7 @@
  * Automatic Photo List Generator for Sigma Club Website
  * 
  * This script scans the components folders and generates a JSON file
- * with all photo filenames and designations, which the website will automatically load.
+ * with all photo filenames, which the website will automatically load.
  */
 
 import fs from 'fs';
@@ -18,28 +18,6 @@ const projectRoot = path.join(__dirname, '..');
 const publicDir = path.join(projectRoot, 'public');
 const componentsDir = path.join(publicDir, 'components');
 const outputFile = path.join(componentsDir, 'photo-data.json');
-const designationsFile = path.join(__dirname, 'member-designations.json');
-
-// Function to extract name from filename
-function extractNameFromFilename(filename) {
-  // Remove file extension
-  const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
-  // Replace any remaining underscores with spaces
-  return nameWithoutExt.replace(/_/g, ' ');
-}
-
-// Function to read designations
-function readDesignations() {
-  try {
-    if (fs.existsSync(designationsFile)) {
-      const data = fs.readFileSync(designationsFile, 'utf8');
-      return JSON.parse(data);
-    }
-  } catch (error) {
-    console.warn('⚠️ Could not read designations file:', error.message);
-  }
-  return { designations: {} };
-}
 
 // Function to get all image files in a directory with their relative paths
 function getImageFiles(dir) {
@@ -177,10 +155,6 @@ if (!fs.existsSync(componentsDir)) {
   process.exit(1);
 }
 
-// Read designations
-const designationsData = readDesignations();
-const designations = designationsData.designations || {};
-
 // Define member directories with their corresponding paths
 const memberDirs = {
   '1st': path.join(componentsDir, 'members/1styear'),
@@ -193,20 +167,7 @@ const memberDirs = {
 const memberPhotos = {};
 Object.entries(memberDirs).forEach(([year, dir]) => {
   if (fs.existsSync(dir)) {
-    const photos = getImageFiles(dir);
-    // Add designations to each photo
-    const yearDesignations = designations[year] || {};
-    memberPhotos[year] = photos.map(photoPath => {
-      const filename = photoPath.split('/').pop() || '';
-      const name = extractNameFromFilename(filename);
-      const designation = yearDesignations[name] || 'Member';
-      
-      return {
-        path: photoPath,
-        name: name,
-        designation: designation
-      };
-    });
+    memberPhotos[year] = getImageFiles(dir);
   } else {
     console.warn(`⚠️ Member directory for ${year} year does not exist: ${dir}`);
     memberPhotos[year] = [];
@@ -225,12 +186,14 @@ const photoData = {
 // Display results
 console.log('📸 Found photos:\n');
 console.log('Members:');
-Object.entries(memberPhotos).forEach(([year, members]) => {
-  console.log(`  ${year} Year: ${members.length} photos`);
-  members.forEach(member => {
-    console.log(`    - ${member.path} (${member.name} - ${member.designation})`);
-  });
-});
+console.log(`  1st Year: ${photoData.memberPhotos['1st'].length} photos`);
+photoData.memberPhotos['1st'].forEach(photo => console.log(`    - ${photo}`));
+console.log(`  2nd Year: ${photoData.memberPhotos['2nd'].length} photos`);
+photoData.memberPhotos['2nd'].forEach(photo => console.log(`    - ${photo}`));
+console.log(`  3rd Year: ${photoData.memberPhotos['3rd'].length} photos`);
+photoData.memberPhotos['3rd'].forEach(photo => console.log(`    - ${photo}`));
+console.log(`  4th Year: ${photoData.memberPhotos['4th'].length} photos`);
+photoData.memberPhotos['4th'].forEach(photo => console.log(`    - ${photo}`));
 
 console.log('\nAlumni:');
 console.log(`  ${photoData.alumniPhotos.length} photos`);
@@ -251,5 +214,5 @@ photoData.magazinePDFs.forEach(pdf => console.log(`    - ${pdf}`));
 // Write to file
 fs.writeFileSync(outputFile, JSON.stringify(photoData, null, 2));
 
-console.log(`\n✅ Photo list with designations generated: ${outputFile}`);
+console.log(`\n✅ Photo list generated: ${outputFile}`);
 console.log('🚀 Restart your dev server to see the changes!\n');

@@ -433,7 +433,7 @@ function App() {
                   <div className="mt-6 flex justify-center">
                     <ElectricBorder color="#0000FF" speed={1.5} chaos={1.2} thickness={2}>
                       <a
-                        href="https://forms.google.com/your-form-link"
+                        href="https://forms.gle/kFsyTj2PSA7wcsGD7"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-all duration-300 inline-block"
@@ -505,19 +505,24 @@ function App() {
     
     // Generate members from photo list
     const yearPhotos = data.memberPhotos?.[selectedYear] || [];
-    const allMembers = yearPhotos.map((photoPath, index) => {
-      const cleanPath = typeof photoPath === 'string' ? photoPath.trim() : '';
+    const allMembers = yearPhotos.map((photoData, index) => {
+      // Handle both old format (string) and new format (object with path, name, designation)
+      const cleanPath = typeof photoData === 'string' ? photoData.trim() : photoData.path || '';
       const imageUrl = cleanPath ? `/${cleanPath}` : '';
-      const filename = cleanPath.split('/').pop() || '';
-      const name = extractNameFromFilename(filename);
+      const name = typeof photoData === 'string' 
+        ? extractNameFromFilename(cleanPath.split('/').pop() || '')
+        : photoData.name || extractNameFromFilename(cleanPath.split('/').pop() || '');
+      const designation = typeof photoData === 'string' ? 'Member' : photoData.designation || 'Member';
+      const displayText = `${name} - ${designation}`;
       
       return {
         id: `${selectedYear}-${index}`,
         name: name,
+        designation: designation,
         year: selectedYear,
         photo: imageUrl,
         image: imageUrl,
-        text: name
+        text: displayText
       };
     });
 
@@ -577,7 +582,7 @@ function App() {
         ) : (
           <CircularGallery
             items={filteredMembers}
-            bend={3}
+            bend={0}
             textColor="#FFFFFF"
             borderRadius={0.05}
             font="bold 24px sans-serif"

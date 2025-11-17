@@ -2,32 +2,120 @@
   "memberPhotos": {
     "1st": [],
     "2nd": [
-      "components/members/2ndyear/Mahesh Teli.jpeg",
-      "components/members/2ndyear/Sangamesh Beerappa Konkani.jpeg"
+      {
+        "path": "components/members/2ndyear/Mahesh Teli.jpeg",
+        "name": "Mahesh Teli",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/2ndyear/Sangamesh Beerappa Konkani.jpeg",
+        "name": "Sangamesh Beerappa Konkani",
+        "designation": "Member"
+      }
     ],
     "3rd": [
-      "components/members/3rdyear/Abhishek Hiremath.jpeg",
-      "components/members/3rdyear/Aditya Pattar.jpeg",
-      "components/members/3rdyear/Akash Madbal.jpeg",
-      "components/members/3rdyear/Arqam S A.jpeg",
-      "components/members/3rdyear/Chetankumar R S.jpeg",
-      "components/members/3rdyear/Darshan H M.jpeg",
-      "components/members/3rdyear/Debarghya Pramanik.jpeg",
-      "components/members/3rdyear/Dinesh H.jpeg",
-      "components/members/3rdyear/Ganashree R.jpeg",
-      "components/members/3rdyear/Girish .jpeg",
-      "components/members/3rdyear/Mohan T.jpeg",
-      "components/members/3rdyear/Pavithra Shankar.jpeg",
-      "components/members/3rdyear/Shravya GS.jpeg",
-      "components/members/3rdyear/Sneha D N.jpeg",
-      "components/members/3rdyear/Spandana BVS.jpeg"
+      {
+        "path": "components/members/3rdyear/Abhishek Hiremath.jpeg",
+        "name": "Abhishek Hiremath",
+        "designation": "Chief Designer"
+      },
+      {
+        "path": "components/members/3rdyear/Aditya Pattar.jpeg",
+        "name": "Aditya Pattar",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/3rdyear/Akash Madbal.jpeg",
+        "name": "Akash Madbal",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/3rdyear/Arqam S A.jpeg",
+        "name": "Arqam S A",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/3rdyear/Chetankumar R S.jpeg",
+        "name": "Chetankumar R S",
+        "designation": "Co Chief Editor"
+      },
+      {
+        "path": "components/members/3rdyear/Darshan H M.jpeg",
+        "name": "Darshan H M",
+        "designation": "Event Co Planner"
+      },
+      {
+        "path": "components/members/3rdyear/Debarghya Pramanik.jpeg",
+        "name": "Debarghya Pramanik",
+        "designation": "Content Co Lead"
+      },
+      {
+        "path": "components/members/3rdyear/Dinesh H.jpeg",
+        "name": "Dinesh H",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/3rdyear/Ganashree R.jpeg",
+        "name": "Ganashree R",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/3rdyear/Girish .jpeg",
+        "name": "Girish ",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/3rdyear/Mohan T.jpeg",
+        "name": "Mohan T",
+        "designation": "Co Treasurer"
+      },
+      {
+        "path": "components/members/3rdyear/Pavithra Shankar.jpeg",
+        "name": "Pavithra Shankar",
+        "designation": "Event Co Planner"
+      },
+      {
+        "path": "components/members/3rdyear/Shravya GS.jpeg",
+        "name": "Shravya GS",
+        "designation": "Event Co Planner"
+      },
+      {
+        "path": "components/members/3rdyear/Sneha D N.jpeg",
+        "name": "Sneha D N",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/3rdyear/Spandana BVS.jpeg",
+        "name": "Spandana BVS",
+        "designation": "Co Treasurer"
+      }
     ],
     "4th": [
-      "components/members/4thyear/Akshita Katte.jpeg",
-      "components/members/4thyear/Shalmala G Nadig.jpeg",
-      "components/members/4thyear/Suhas S P.jpeg",
-      "components/members/4thyear/Vinayak B.jpeg",
-      "components/members/4thyear/Vismaya M B.jpeg"
+      {
+        "path": "components/members/4thyear/Akshita Katte.jpeg",
+        "name": "Akshita Katte",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/4thyear/Shalmala G Nadig.jpeg",
+        "name": "Shalmala G Nadig",
+        "designation": "Chief Editor"
+      },
+      {
+        "path": "components/members/4thyear/Suhas S P.jpeg",
+        "name": "Suhas S P",
+        "designation": "Content Lead"
+      },
+      {
+        "path": "components/members/4thyear/Vinayak B.jpeg",
+        "name": "Vinayak B",
+        "designation": "Member"
+      },
+      {
+        "path": "components/members/4thyear/Vismaya M B.jpeg",
+        "name": "Vismaya M B",
+        "designation": "Treasurer"
+      }
     ]
   },
   "alumniPhotos": [],
@@ -36,7 +124,7 @@
     "components/about/team2.jpeg"
   ],
   "homeImages": [
-    "components/home/hjwjw.jpg"
+    "components/home/poster.jpeg"
   ],
   "magazinePDFs": [
     "components/magazines/Browse Edition 2016.pdf",
@@ -51,5 +139,5 @@
     "components/magazines/Winter Edition 2024.pdf",
     "components/magazines/Winter Edition SIGMA -2022.pdf"
   ],
-  "generatedAt": "2025-11-14T07:58:28.357Z"
+  "generatedAt": "2025-11-17T11:29:36.256Z"
 }

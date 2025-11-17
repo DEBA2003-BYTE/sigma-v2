@@ -145,6 +145,7 @@ class Media {
         uniform vec2 uPlaneSizes;
         uniform sampler2D tMap;
         uniform float uBorderRadius;
+        uniform float uTime;
         varying vec2 vUv;
         
         float roundedBoxSDF(vec2 p, vec2 b, float r) {
@@ -161,11 +162,46 @@ class Media {
             vUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
             vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
           );
+          
+          // Glass effect parameters
+          float glassOpacity = 0.9;
+          float blurAmount = 0.004;
+          float glowIntensity = 0.6;
+          vec3 glowColor = vec3(0.5, 0.8, 1.0); // Brighter blue glow
+          
+          // Sample texture with slight blur for glass effect
           vec4 color = texture2D(tMap, uv);
+          vec4 colorBlur1 = texture2D(tMap, uv + vec2(blurAmount, 0.0));
+          vec4 colorBlur2 = texture2D(tMap, uv - vec2(blurAmount, 0.0));
+          vec4 colorBlur3 = texture2D(tMap, uv + vec2(0.0, blurAmount));
+          vec4 colorBlur4 = texture2D(tMap, uv - vec2(0.0, blurAmount));
+          vec4 blurredColor = (color + colorBlur1 + colorBlur2 + colorBlur3 + colorBlur4) / 5.0;
+          
+          // Mix original with blurred for glass effect
+          color = mix(color, blurredColor, 0.3);
+          
+          // Calculate distance from edges for glow effect
+          float edgeDistance = min(vUv.x, min(vUv.y, min(1.0 - vUv.x, 1.0 - vUv.y)));
+          float glow = smoothstep(0.0, 0.1, edgeDistance) * (1.0 - smoothstep(0.1, 0.3, edgeDistance));
+          
+          // Animated glow
+          float animatedGlow = glow * glowIntensity * (0.8 + 0.2 * sin(uTime * 2.0));
+          
+          // Apply rounded corners
           float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
           float edgeSmooth = 0.002;
           float alpha = 1.0 - smoothstep(-edgeSmooth, edgeSmooth, d);
-          gl_FragColor = vec4(color.rgb, alpha);
+          
+          // Apply glass transparency and glow
+          color.rgb = mix(color.rgb, color.rgb + glowColor * animatedGlow, 0.2);
+          color.a = alpha * glassOpacity;
+          
+          // Add subtle border glow
+          if (alpha > 0.01 && alpha < 0.99) {
+            color.rgb += glowColor * animatedGlow * 0.5;
+          }
+          
+          gl_FragColor = color;
         }
       `,
       uniforms: {
