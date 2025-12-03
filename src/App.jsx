@@ -513,7 +513,7 @@ function App() {
         ? extractNameFromFilename(cleanPath.split('/').pop() || '')
         : photoData.name || extractNameFromFilename(cleanPath.split('/').pop() || '');
       const designation = typeof photoData === 'string' ? 'Member' : photoData.designation || 'Member';
-      const displayText = `${name} - ${designation}`;
+      const displayText = `${name}\n${designation}`;
       
       return {
         id: `${selectedYear}-${index}`,

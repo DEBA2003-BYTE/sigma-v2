@@ -29,9 +29,21 @@ function createTextTexture(gl, text, font = 'bold 30px monospace', color = 'blac
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
   context.font = font;
-  const metrics = context.measureText(text);
-  const textWidth = Math.ceil(metrics.width);
-  const textHeight = Math.ceil(parseInt(font, 10) * 1.2);
+  
+  // Split text by newlines to support multi-line rendering
+  const lines = text.split('\n');
+  const lineHeight = Math.ceil(parseInt(font, 10) * 1.2);
+  
+  // Measure the width of each line and find the maximum
+  let maxWidth = 0;
+  lines.forEach(line => {
+    const metrics = context.measureText(line);
+    maxWidth = Math.max(maxWidth, Math.ceil(metrics.width));
+  });
+  
+  const textWidth = maxWidth;
+  const textHeight = lineHeight * lines.length;
+  
   canvas.width = textWidth + 20;
   canvas.height = textHeight + 20;
   context.font = font;
@@ -39,7 +51,13 @@ function createTextTexture(gl, text, font = 'bold 30px monospace', color = 'blac
   context.textBaseline = 'middle';
   context.textAlign = 'center';
   context.clearRect(0, 0, canvas.width, canvas.height);
-  context.fillText(text, canvas.width / 2, canvas.height / 2);
+  
+  // Draw each line
+  lines.forEach((line, index) => {
+    const y = (canvas.height / 2) - (textHeight / 2) + (lineHeight * index) + (lineHeight / 2);
+    context.fillText(line, canvas.width / 2, y);
+  });
+  
   const texture = new Texture(gl, { generateMipmaps: false });
   texture.image = canvas;
   return { texture, width: canvas.width, height: canvas.height };
@@ -394,13 +412,17 @@ class App {
     this.isDown = true;
     this.scroll.position = this.scroll.current;
     this.start = e.touches ? e.touches[0].clientX : e.clientX;
+    this.isTouch = !!e.touches; // Track if this is a touch event
   }
 
   onTouchMove(e) {
     if (!this.isDown) return;
     const x = e.touches ? e.touches[0].clientX : e.clientX;
     const distance = (x - this.start) * (this.scrollSpeed * 0.025);
-    this.scroll.target = this.scroll.position - distance;
+    // Invert direction for mouse (laptop) to match natural drag behavior
+    this.scroll.target = this.isTouch 
+      ? this.scroll.position - distance  // Touch: swipe right moves content right
+      : this.scroll.position + distance; // Mouse: drag right moves content right
   }
 
   onTouchUp() {
