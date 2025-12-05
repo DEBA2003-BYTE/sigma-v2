@@ -419,10 +419,8 @@ class App {
     if (!this.isDown) return;
     const x = e.touches ? e.touches[0].clientX : e.clientX;
     const distance = (x - this.start) * (this.scrollSpeed * 0.025);
-    // Invert direction for mouse (laptop) to match natural drag behavior
-    this.scroll.target = this.isTouch 
-      ? this.scroll.position - distance  // Touch: swipe right moves content right
-      : this.scroll.position + distance; // Mouse: drag right moves content right
+    // Swipe/drag right moves content left (reveals next item)
+    this.scroll.target = this.scroll.position + distance;
   }
 
   onTouchUp() {
