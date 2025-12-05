@@ -420,7 +420,7 @@ class App {
     const x = e.touches ? e.touches[0].clientX : e.clientX;
     const distance = (x - this.start) * (this.scrollSpeed * 0.025);
     // Swipe/drag right moves content left (reveals next item)
-    this.scroll.target = this.scroll.position + distance;
+    this.scroll.target = this.scroll.position - distance;
   }
 
   onTouchUp() {
